@@ -16,6 +16,10 @@ def make_env(env_name):
     return env
 
 
+
+
+
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=None)
     parser.add_argument('env_id', nargs='?', default='MountainCar-v0', help='Select the environment to run')
@@ -34,8 +38,8 @@ if __name__ == '__main__':
     outdir = './random-agent-results'
     env = wrappers.Monitor(env, directory=outdir, force=True)
     env.seed(0)
-    #agent = agent.random(env.action_space)
-    agent = agent.bespoke(env.action_space)
+    agent = agent.random(env.action_space)
+    #agent = agent.bespoke(env.action_space)
 
     episode_count = 10
     reward = 0
@@ -44,13 +48,17 @@ if __name__ == '__main__':
     for i in range(episode_count):
         ob = env.reset()
         step = 0
+        episode_reward = 0
         while True:
             action = agent.act(ob, reward, done)
-            print("%d/%d ob %r rew %r done %r -> act %r -> " %(step, i, ob, reward, done, action), end='')
-            ob, reward, done, _ = env.step(action)
-            print("ob %r rew %r done %r" %(ob, reward, done))
+            next_ob, reward, done, _ = env.step(action)
+            print("%d/%d ob %r rew %r done %r -> act %r -> ob %r rew %r done %r" %(step, i, ob, reward, done, action, next_ob, reward, done))
             step += 1
+            episode_reward += reward
+            agent.learn(ob, action, reward, done)
+            ob = next_ob
             if done:
+                print("episode %d done with episode reward %d" %(i, episode_reward));
                 break
             # Note there's no env.render() here. But the environment still can open window and
             # render if asked by env.monitor: it calls env.render('rgb_array') to record video.
