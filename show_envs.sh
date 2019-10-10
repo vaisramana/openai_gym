@@ -1,8 +1,28 @@
 
 import numpy as np
 import pandas as pd
+import matplotlib.pyplot as plt
 import gym
 #from IPython.display import display, HTML
+
+
+
+def draw_mountain():
+    min_x = -1.2
+    max_x = 0.6
+    x = np.linspace(min_x, max_x, 100)
+    y = np.sin(3*x)*.45+.55
+    plt.plot(x, y)
+    
+    my_x_ticks = np.arange(min_x, max_x, 0.1)
+    plt.xticks(my_x_ticks)
+    
+    plt.show()
+
+
+
+
+
 
 space_names = ['obs space', 'act space', 'reward range', 'mas steps']
 df = pd.DataFrame(columns=space_names)

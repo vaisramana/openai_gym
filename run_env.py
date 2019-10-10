@@ -3,6 +3,7 @@ import sys
 
 import gym
 from gym import wrappers, logger
+import agent
 
 
 def make_env(env_name):
@@ -14,14 +15,6 @@ def make_env(env_name):
          print('max episode steps = {}'.format(env._max_episode_steps))
     return env
 
-
-class RandomAgent(object):
-    """The world's simplest agent!"""
-    def __init__(self, action_space):
-        self.action_space = action_space
-
-    def act(self, observation, reward, done):
-        return self.action_space.sample()
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=None)
@@ -41,19 +34,22 @@ if __name__ == '__main__':
     outdir = './random-agent-results'
     env = wrappers.Monitor(env, directory=outdir, force=True)
     env.seed(0)
-    agent = RandomAgent(env.action_space)
+    #agent = agent.random(env.action_space)
+    agent = agent.bespoke(env.action_space)
 
-    episode_count = 1
+    episode_count = 10
     reward = 0
     done = False
 
     for i in range(episode_count):
         ob = env.reset()
+        step = 0
         while True:
             action = agent.act(ob, reward, done)
-            #print("%d ob %r rew %r done %r -> act %r -> " %(i, ob, reward, done, action), end='')
+            print("%d/%d ob %r rew %r done %r -> act %r -> " %(step, i, ob, reward, done, action), end='')
             ob, reward, done, _ = env.step(action)
-            #print("ob %r rew %r done %r" %(ob, reward, done))
+            print("ob %r rew %r done %r" %(ob, reward, done))
+            step += 1
             if done:
                 break
             # Note there's no env.render() here. But the environment still can open window and
