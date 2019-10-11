@@ -3,8 +3,9 @@ import sys
 
 import gym
 from gym import wrappers, logger
-import agent.common
+import agent.wrapper
 import agent.mountaincar
+import agent.cliffwalking
 
 
 def make_env(env_name):
@@ -56,10 +57,11 @@ if __name__ == '__main__':
     env = make_env(args.env_id)
 
     env.seed(0)
-    #agent = agent.common.random(env.action_space)
-    agent = agent.mountaincar.bespoke(env.action_space)
+    #agent = agent.wrapper.random(env)
+    #agent = agent.mountaincar.bespoke(env)
+    agent = agent.cliffwalking.bespoke(env)
 
-    episode_count = 3
+    episode_count = 1
     reward = 0
     done = False
 

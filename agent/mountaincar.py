@@ -1,9 +1,9 @@
 
 
+import agent.wrapper
 
 
-
-class bespoke:
+class bespoke(agent.wrapper.agent):
     def __init__(self, env):
         pass
     
