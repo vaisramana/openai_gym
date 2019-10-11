@@ -3,7 +3,8 @@ import sys
 
 import gym
 from gym import wrappers, logger
-import agent
+import agent.common
+import agent.mountaincar
 
 
 def make_env(env_name):
@@ -26,7 +27,6 @@ def episode(env, agent, render=False, train=False):
     while True: 
         if render: 
             env.render() 
-            sys.stdout.flush()
         action = agent.act(observation)
         next_observation, reward, done, _ = env.step(action) 
         #print("%d ob %r rew %r done %r -> act %r -> ob %r rew %r done %r" %(step, observation, reward, done, action, next_observation, reward, done))
@@ -34,7 +34,7 @@ def episode(env, agent, render=False, train=False):
         if train:
             agent.learn(observation, action, reward, done) 
         if done:
-            #print("episode done with episode reward %d" %(episode_reward));
+            print("episode done with episode reward %d" %(episode_reward));
             break
         observation = next_observation
         step += 1
@@ -56,8 +56,8 @@ if __name__ == '__main__':
     env = make_env(args.env_id)
 
     env.seed(0)
-    #agent = agent.random(env.action_space)
-    agent = agent.mountaincar_bespoke(env.action_space)
+    #agent = agent.common.random(env.action_space)
+    agent = agent.mountaincar.bespoke(env.action_space)
 
     episode_count = 3
     reward = 0
@@ -66,6 +66,7 @@ if __name__ == '__main__':
     for i in range(episode_count):
         ob = env.reset()
         step = 0
+        #episode_reward = episode(env, agent, render=False, train=True)
         episode_reward = episode(env, agent, render=True, train=True)
 
     # Close the env and write monitor result info to disk
